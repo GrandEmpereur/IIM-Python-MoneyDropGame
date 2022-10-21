@@ -3,7 +3,6 @@ import os
 from assets.question import *
 from assets.checkAnwsers import *
 from assets.textWraper import *
-from assets.nextQuestion import *
 import time
 
 pg.init()
@@ -36,11 +35,19 @@ while running:
                 running = False
         if event.type == pg.QUIT:
             running = False
-        if event.type == pg.MOUSEBUTTONDOWN:
+        if event.type == pg.MOUSEBUTTONDOWN:    
             if event.button == 1:
-                # run the check answer function
-                correct = checkButton(
-                    button, button2, button3, button4, answers, correct_answer)
+                nextQuestion = checkButton(button, button2, button3,button4, answers, correct_answer)
+                if nextQuestion:
+                    category = Questions.get_category(Questions)
+                    question = Questions.get_question(Questions, category[0])
+                    answers = Questions.get_answers(Questions, category[0])
+                    correct_answer = Questions.get_correct_answer(Questions, category[0])
+                    i = 0
+                    for answer in answers:
+                        text_surface = font.render(answer, True, (0, 0, 0))
+                        screen.blit(text_surface, (200 + 200*i, 320))
+                        i = i+1
 
     # CATEGORY
     for i in range(len(category)):
@@ -81,25 +88,13 @@ while running:
 
     # CHECK ANSWER
     correct_answer = Questions.get_correct_answer(Questions, category[0])
-    checked = checkButton(button, button2, button3,button4, answers, correct_answer)
-
-    # NEXT QUESTION
-    if checked == True:
-        category = Questions.get_category(Questions)
-        question = Questions.get_question(Questions, category[0])
-        answers = Questions.get_answers(Questions, category[0])
-        correct_answer = Questions.get_correct_answer(Questions, category[0])
-        i = 0
-        for answer in answers:
-            text_surface = font.render(answer, True, (0, 0, 0))
-            screen.blit(text_surface, (200 + 200*i, 320))
-            i = i+1
+    checkButton(button, button2, button3,button4, answers, correct_answer)
 
     # END GAME
-    # if i == 5:
-    #     running = False
-    # if checked == False:
-    #     running = False
+    if i == 10:
+        running = False
+    if nextQuestion == False:
+        running = False
 
     pg.display.flip()
 pg.quit()
