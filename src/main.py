@@ -3,14 +3,15 @@ import os
 from assets.question import *
 from assets.checkAnwsers import *
 from assets.textWraper import *
-import time
+from assets.timer import countdown
+from assets.soundEffect import backgroundMusic
 
 pg.init()
 pg.font.init()
 pg.mixer.init()
 
 screen = pg.display.set_mode((1136, 640))
-pg.display.set_caption("My Game")
+pg.display.set_caption("Money Drop")
 
 # Game Loop
 running = True
@@ -19,9 +20,7 @@ category = Questions.get_category(Questions)
 
 while running:
     # MUSIC BACKGROUND
-    pg.mixer.music.load(os.path.join("src/assets", "sounds", "music.mp3"))
-    pg.mixer.music.play(-1)
-    pg.mixer.music.set_volume(0.5)
+    backgroundMusic("src/assets/sounds/music.mp3")
 
     # BACKGROUND IMAGE
     background = pg.image.load("images/Money-Drop.png")
@@ -54,7 +53,7 @@ while running:
         font = pg.font.Font(None, 30)
         text = category[0]
         text_surface = font.render(text, True, (0, 0, 0))
-        screen.blit(text_surface, (300, 80))
+        screen.blit(text_surface, (300, 60))
 
     # QUESTION
     question = Questions.get_question(Questions, category[0])
@@ -65,7 +64,7 @@ while running:
         font = pg.font.Font(None, 30)
         text = question[i]
         text_surface = font.render(text, True, (0, 0, 0))
-        screen.blit(text_surface, (300, 120 + i * 30))
+        screen.blit(text_surface, (300, 100 + i * 30))
 
     # ANSWERS
     answers = Questions.get_answers(Questions, category[0])
@@ -90,10 +89,8 @@ while running:
     correct_answer = Questions.get_correct_answer(Questions, category[0])
 
     #End Game
-    # if the user have 5 correct answers the game will end
     if i == 5:
         running = False
-    # if the user have a wrong answer the game will end
     if checkButton(button, button2, button3,button4, answers, correct_answer) == False:
         running = False
 
