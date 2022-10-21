@@ -88,12 +88,13 @@ while running:
 
     # CHECK ANSWER
     correct_answer = Questions.get_correct_answer(Questions, category[0])
-    checkButton(button, button2, button3,button4, answers, correct_answer)
 
-    # END GAME
-    if i == 10:
+    #End Game
+    # if the user have 5 correct answers the game will end
+    if i == 5:
         running = False
-    if nextQuestion == False:
+    # if the user have a wrong answer the game will end
+    if checkButton(button, button2, button3,button4, answers, correct_answer) == False:
         running = False
 
     pg.display.flip()
